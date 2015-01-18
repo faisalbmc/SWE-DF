@@ -11,3 +11,9 @@ documentation/doxy/
 .project
 .cproject
 .pydevproject
+/Debug/
+/build/
+/versions/
+/netcdf/
+/documentation/
+/_00.nc

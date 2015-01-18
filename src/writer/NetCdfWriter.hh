@@ -39,7 +39,7 @@
 #define MPI_INCLUDED_NETCDF
 #endif
 #endif
-#include <netcdf.h>
+#include "netcdf.h"
 #ifdef MPI_INCLUDED_NETCDF
 #undef MPI_INCLUDED
 #undef MPI_INCLUDED_NETCDF

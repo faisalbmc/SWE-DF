@@ -30,7 +30,7 @@
 parallelization='mpi'
 solver='fwave'
 #solver='augrie'
-writeNetCDF='yes'
+#writeNetCDF='no'
 
 # Library paths (only required of not installed in default path)
 #netCDFDir=''

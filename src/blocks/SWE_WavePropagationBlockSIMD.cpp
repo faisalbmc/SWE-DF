@@ -125,18 +125,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 	const int end_ny_1_1 = ny + 1;
 	const int end_ny_1_2 = ny + 2;
 
-#if  WAVE_PROPAGATION_SOLVER==5
-	// Note, that ny is used instead of (ny + 1). This is due to the fact, that in the loop below, j starts with 1!
-	// So, for SSE, for instance, j takes values 1, 5, 9, 13, ...
-	// Now, consider ny == 3
-	//
-	// Then the code below returns 0 as end of the vector loop, which is correct (!)
-	//
-	// if, instead (ny + 1) was used, the end of the vector loop is 4 (!)
-	// that means, the solver accesses the elements (1, 2, 3, 4), even though only the elements (0, 1, 2, 3) exist (recall, ny == 3) (!)
-	const int end_ny_V_1 = ny & (~(VECTOR_LENGTH - 1));
-	const int end_ny_V_2 = (ny + 1) & (~(VECTOR_LENGTH - 1));
-#endif /*  WAVE_PROPAGATION_SOLVER==5 */
+
 
 	/***************************************************************************************
 	 * compute the net-updates for the vertical edges
@@ -157,18 +146,7 @@ SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()
 		for (int i = 1; i < nx + 2; i++) {
 			int j = 1;
 
-#if  WAVE_PROPAGATION_SOLVER==5 and (not defined VECTOR_NOVEC)
-			for (; j < end_ny_V_1; j += VECTOR_LENGTH) {
-				float maxEdgeSpeed;
 
-				wavePropagationSolver.computeNetUpdates_SIMD (
-					&h[i - 1][j], &h[i][j],
-					&hu[i - 1][j], &hu[i][j],
-					&b[i - 1][j], &b[i][j],
-					&hNetUpdatesLeft[i - 1][j - 1], &hNetUpdatesRight[i - 1][j - 1],
-					&huNetUpdatesLeft[i - 1][j - 1], &huNetUpdatesRight[i - 1][j - 1],
-					maxEdgeSpeed
-				);
 
 #ifdef LOOP_OPENMP
 				//update the thread-local maximum wave speed

@@ -30,12 +30,24 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <time.h>
+#include <sys/time.h>
 
-#ifndef CUDA
-#include "blocks/SWE_WavePropagationBlock.hh"
-#else
-#include "blocks/cuda/SWE_WavePropagationBlockCuda.hh"
+/**
+ * This is a modification to support the different blocks used in the project
+ * In order to use another block, more modifications below must be done
+ */
+
+#if BLOCK_MODE==1
+#include "../blocks/SWE_WavePropagationBlock.hh"
+#elif BLOCK_MODE==2
+#include "../blocks/SWE_WaveAccumulationBlock.hh"
+#elif BLOCK_MODE==3
+#include "../blocks/SWE_WaveAccumulationBlockIntrinsicTest.hh"
+#elif BLOCK_MODE==4
+#include "../blocks/SWE_WaveAccumulationBlockIntrinsic.hh"
 #endif
+
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -57,6 +69,41 @@
 #include "tools/help.hh"
 #include "tools/Logger.hh"
 #include "tools/ProgressBar.hh"
+
+typedef struct {
+	/** used by gettimeofday() */
+	struct timeval tv;
+	/** used by clock()  */
+	clock_t ticks;
+} time_marker_t;
+
+time_marker_t get_time() {
+  	time_marker_t retval;
+  	gettimeofday(&retval.tv, NULL);
+  	retval.ticks = clock();
+  	return retval;
+  }
+
+
+  double get_ToD_diff_time(time_marker_t time) {
+  	struct timeval tmp;
+  	gettimeofday(&tmp, NULL);
+  	tmp.tv_sec -= time.tv.tv_sec;
+  	tmp.tv_usec -= time.tv.tv_usec;
+  	return (double)tmp.tv_sec + (double)tmp.tv_usec*1e-6;
+  }
+
+
+  double get_ticks_diff_time(time_marker_t time) {
+  	clock_t tmp = clock();
+  	return ((tmp - time.ticks) / ((double)CLOCKS_PER_SEC));
+  }
+
+  void print_flops(int flop, time_marker_t time) {
+  	printf("FLOPS with clock(): %e \n", (double) flop / (get_ticks_diff_time(time)));
+  	printf("FLOPS with timeofday(): %e \n", (double) flop / (get_ToD_diff_time(time)));
+  }
+
 
 /**
  * Main program for the simulation on a single SWE_WavePropagationBlock.
@@ -140,8 +187,9 @@ int main( int argc, char** argv ) {
   SWE_RadialDamBreakScenario l_scenario;
   #endif
 
+
   //! number of checkpoints for visualization (at each checkpoint in time, an output file is written).
-  int l_numberOfCheckPoints = 20;
+  int l_numberOfCheckPoints = 3;
 
   //! size of a single cell in x- and y-direction
   float l_dX, l_dY;
@@ -150,12 +198,18 @@ int main( int argc, char** argv ) {
   l_dX = (l_scenario.getBoundaryPos(BND_RIGHT) - l_scenario.getBoundaryPos(BND_LEFT) )/l_nX;
   l_dY = (l_scenario.getBoundaryPos(BND_TOP) - l_scenario.getBoundaryPos(BND_BOTTOM) )/l_nY;
 
-  // create a single wave propagation block
-  #ifndef CUDA
-  SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-  #else
-  SWE_WavePropagationBlockCuda l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-  #endif
+
+
+	#if BLOCK_MODE==1
+     SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+	#elif BLOCK_MODE==2
+     SWE_WaveAccumulationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+	#elif BLOCK_MODE==3
+     SWE_WaveAccumulationBlockIntrinsicTest l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+	#elif BLOCK_MODE==4
+     SWE_WaveAccumulationBlockIntrinsic l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+    #endif
+
 
   //! origin of the simulation domain in x- and y-direction
   float l_originX, l_originY;
@@ -225,12 +279,16 @@ int main( int argc, char** argv ) {
   progressBar.update(l_t);
 
   unsigned int l_iterations = 0;
-
+  double totalTimeWithClock = 0.0;
+  double totalTimeWithTimeOfDay = 0.0;
+  time_marker_t ticks;
+  time_marker_t timeOfDay;
   // loop over checkpoints
   for(int c=1; c<=l_numberOfCheckPoints; c++) {
 
     // do time steps until next checkpoint is reached
     while( l_t < l_checkPoints[c] ) {
+
       // set values in ghost cells:
       l_wavePropgationBlock.setGhostLayer();
       
@@ -243,10 +301,22 @@ int main( int argc, char** argv ) {
 //      l_wavePropgationBlock.computeMaxTimestep();
 
       // compute numerical flux on each edge
+
+      ticks = get_time();
+      timeOfDay = get_time();
+
       l_wavePropgationBlock.computeNumericalFluxes();
+
+      totalTimeWithClock += get_ticks_diff_time(ticks);
+      totalTimeWithTimeOfDay += get_ToD_diff_time(timeOfDay);
 
       //! maximum allowed time step width.
       float l_maxTimeStepWidth = l_wavePropgationBlock.getMaxTimestep();
+
+      totalTimeWithClock += get_ticks_diff_time(ticks);
+      totalTimeWithTimeOfDay += get_ToD_diff_time(timeOfDay);
+      // update the cpu time in the logger
+      tools::Logger::logger.updateTime("Cpu");
 
       // update the cell values
       l_wavePropgationBlock.updateUnknowns(l_maxTimeStepWidth);
@@ -258,6 +328,9 @@ int main( int argc, char** argv ) {
       l_t += l_maxTimeStepWidth;
       l_iterations++;
 
+
+      //TODO this is for avoiding infinity
+   //  break;
       // print the current simulation time
       progressBar.clear();
       tools::Logger::logger.printSimulationTime(l_t);
@@ -270,11 +343,17 @@ int main( int argc, char** argv ) {
     progressBar.update(l_t);
 
     // write output
-    l_writer.writeTimeStep( l_wavePropgationBlock.getWaterHeight(),
-                            l_wavePropgationBlock.getDischarge_hu(),
-                            l_wavePropgationBlock.getDischarge_hv(),
-                            l_t);
+//    l_writer.writeTimeStep( l_wavePropgationBlock.getWaterHeight(),
+//                            l_wavePropgationBlock.getDischarge_hu(),
+//                            l_wavePropgationBlock.getDischarge_hv(),
+//                            l_t);
   }
+
+  printf("The number of FLOPs: %f\n", l_wavePropgationBlock.flops);
+  printf("Time with clock(): %f\n", totalTimeWithClock);
+  printf("Time with timeofday(): %f\n", totalTimeWithTimeOfDay);
+  printf("GFLOPS with clock(): %f\n", l_wavePropgationBlock.flops/(totalTimeWithClock*1e09));
+  printf("GFLOPS with timeofday: %f\n", l_wavePropgationBlock.flops/(totalTimeWithTimeOfDay*1e09));
 
   /**
    * Finalize.

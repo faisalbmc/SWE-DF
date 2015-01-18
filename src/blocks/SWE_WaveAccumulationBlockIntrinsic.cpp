@@ -31,7 +31,7 @@
 #include <cstring>
 #include <limits>
 
-#include "SWE_WaveAccumulationBlockIntrinsicTest.hh"
+#include "SWE_WaveAccumulationBlockIntrinsic.hh"
 #include <immintrin.h>
 #ifdef LOOP_OPENMP
 #include <omp.h>
@@ -51,7 +51,7 @@
  * Net updates are intended to hold the accumulated(!) net updates computed on the edges.
  *
  */
-SWE_WaveAccumulationBlockIntrinsicTest::SWE_WaveAccumulationBlockIntrinsicTest(
+SWE_WaveAccumulationBlockIntrinsic::SWE_WaveAccumulationBlockIntrinsic(
 		int l_nx, int l_ny,
 		float l_dx, float l_dy):
   SWE_Block(l_nx, l_ny, l_dx, l_dy),
@@ -60,25 +60,16 @@ SWE_WaveAccumulationBlockIntrinsicTest::SWE_WaveAccumulationBlockIntrinsicTest(
   hvNetUpdates(nx+2, ny+2)
 {}
 
-void cmp(float* scalar, __m256 intr, string name){
-	 float rest4[VEC_SIZE] __attribute__((aligned(64)));
-	 _mm256_store_ps(rest4,intr);
 
-	 for(int i=0; i<VEC_SIZE; i++){
-		// cout << "L "<<  name << " " << i << " " << scalar[i]<<" "<< rest4[i] << "\n";
-		 if(*(scalar+i)!= rest4[i] && std::abs(*(scalar+i)- rest4[i])>=0.01){
-			 cout << "NE "<<  name << " " << i << " " << *(scalar+i)<<" "<< rest4[i]<<
-					 " " <<*(scalar+i)- rest4[i]  <<"\n";
-		 }
-	 }
-}
+
+
 
 /**
  * Compute net updates for the block.
  * The member variable #maxTimestep will be updated with the 
  * maximum allowed time step size
  */
-void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
+void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 
 	float dx_inv = 1.0f/dx;
 	float dy_inv = 1.0f/dy;
@@ -115,27 +106,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 			__m256 bLeft = _mm256_loadu_ps(&b[i-1][j]);
 			__m256 bRight = _mm256_loadu_ps(&b[i][j]);
 
-			float maxWaveSpeedt;
-			int trace=0;
-			int trace2=0;
-						for(int k = 0; k < VEC_SIZE; k++){
 
-
-
-				if (i==6 && j+k==7){
-					//trace=1;
-				}
-				wavePropagationSolverOrig.computeNetUpdates( h[i-1][j+k], h[i][j+k],
-                                               hu[i-1][j+k], hu[i][j+k],
-                                               b[i-1][j+k], b[i][j+k],
-                                               hNetUpLeft[k], hNetUpRight[k],
-                                               huNetUpLeft[k], huNetUpRight[k],
-                                               maxEdgeSpeed[k],trace );
-
-				trace2+=trace;
-				trace=0;
-
-			}
 			// accumulate net updates to cell-wise net updates for h and hu
 //				hNetUpdates[i-1][j]  += dx_inv * hNetUpLeft;
 //				huNetUpdates[i-1][j] += dx_inv * huNetUpLeft;
@@ -148,13 +119,8 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 							wavePropagationSolver.computeNetUpdates( hLeft, hRight,
 												huLeft, huRight, bLeft, bRight,
 												o_hUpsateLefti, o_hUpsateRighti, o_huUpsateLefti,
-												o_huUpsateRighti,  o_maxWaveSpeedi,trace2);
+												o_huUpsateRighti,  o_maxWaveSpeedi);
 
-			cmp(hNetUpLeft,o_hUpsateLefti, "hNetUpDow");
-			cmp(hNetUpRight,o_hUpsateRighti, "hNetUpUpw");
-			cmp(huNetUpLeft,o_huUpsateLefti, "hvNetUpDow");
-			cmp(huNetUpRight,o_huUpsateRighti, "hvNetUpUpw");
-			cmp(maxEdgeSpeed,o_maxWaveSpeedi, "maxEdgeSpeed");
 
 			__m256 dy_inv_vec=_mm256_set1_ps(dy_inv);
 
@@ -198,6 +164,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 			#endif // LOOP_OPENMP
 		}
 	}
+	flops += 58*ny*(nx+1);
 
 	// compute the net-updates for the horizontal edges
 
@@ -230,29 +197,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 			int trace=0;
 			int trace2=0;
 			float maxWaveSpeedt;
-			for(int k = 0; k < VEC_SIZE; k++){
 
-				if (i==4 && j+k==5){
-				//	trace=1;
-				}
-				wavePropagationSolverOrig.computeNetUpdates( h[i][k+j-1], h[i][j+k],
-                                               hv[i][k+j-1], hv[i][j+k],
-                                               b[i][k+j-1], b[i][k+j],
-                                               hNetUpDow[k], hNetUpUpw[k],
-                                               hvNetUpDow[k], hvNetUpUpw[k],
-                                               maxEdgeSpeed[k],trace );
-
-
-				// accumulate net updates to cell-wise net updates for h and hu
-						//cout << i << " " << j << "\n";
-//							hNetUpdates[i][k+j-1]  += dy_inv * hNetUpDow[k];
-//							hvNetUpdates[i][k+ j-1] += dy_inv * hvNetUpDow[k];
-//							hNetUpdates[i][k+j]    += dy_inv * hNetUpUpw[k];
-//							hvNetUpdates[i][k+j]   += dy_inv * hvNetUpUpw[k];
-							maxWaveSpeedt = std::max(maxWaveSpeed, maxEdgeSpeed[k]);
-				trace2+=trace;
-				trace=0;
-			}
 
 			//registers where results are obtained
 
@@ -262,13 +207,8 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 			wavePropagationSolver.computeNetUpdates( hLeft, hRight,
 								hvLeft, hvRight, bLeft, bRight,
 								o_hUpsateLefti, o_hUpsateRighti, o_huUpsateLefti,
-								o_huUpsateRighti,  o_maxWaveSpeedi,trace2);
+								o_huUpsateRighti,  o_maxWaveSpeedi);
 
-			cmp(hNetUpDow,o_hUpsateLefti, "hNetUpDow");
-			cmp(hNetUpUpw,o_hUpsateRighti, "hNetUpUpw");
-			cmp(hvNetUpDow,o_huUpsateLefti, "hvNetUpDow");
-			cmp(hvNetUpUpw,o_huUpsateRighti, "hvNetUpUpw");
-			cmp(maxEdgeSpeed,o_maxWaveSpeedi, "maxEdgeSpeed");
 
 			__m256 dy_inv_vec=_mm256_set1_ps(dy_inv);
 
@@ -305,9 +245,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 				maxWaveSpeed = std::max(maxWaveSpeed, maxspeeds[x]);
 			}
 
-			if (maxWaveSpeed!=maxWaveSpeedt){
-				cout << "Mismatching wave speeds: " << maxWaveSpeed << " " << maxWaveSpeedt << "\n";
-			}
+
 
 			#ifdef LOOP_OPENMP
 				//update the thread-local maximum wave speed
@@ -320,6 +258,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
 
 			}
 	}
+	flops += 58*ny*nx;
 
 #ifdef LOOP_OPENMP
 	#pragma omp critical
@@ -352,7 +291,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::computeNumericalFluxes() {
  *
  * @param dt time step width used in the update.
  */
-void SWE_WaveAccumulationBlockIntrinsicTest::updateUnknowns(float dt) {
+void SWE_WaveAccumulationBlockIntrinsic::updateUnknowns(float dt) {
 
   //update cell averages with the net-updates
 #ifdef LOOP_OPENMP
@@ -392,6 +331,7 @@ void SWE_WaveAccumulationBlockIntrinsicTest::updateUnknowns(float dt) {
 			}
 		}
 	}
+	flops += 6*ny*nx;
 }
 
 /**

@@ -40,11 +40,12 @@
 
 // *** SWE_WaveAccumulationBlock only supports the following wave propagation solvers:
 //  2: Approximate Augmented Riemann solver (functional implementation: AugRieFun)
-//  4: f-Wave (vectorized implementation: FWaveVec) 
+//  4: f-Wave (vectorized implementation: FWaveVec)
 #if WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRieFun.hpp"
 #elif WAVE_PROPAGATION_SOLVER==4
-#include <solvers/FWaveVec.hpp>
+#include "solvers/FWaveVecTrace.hpp"
+#include "solvers/FWaveIntrinsicTrace.hpp"
 #else
 #warning chosen wave propagation solver not supported by SWE_WaveAccumulationBlock
 #endif
@@ -57,14 +58,16 @@
  *  F-Wave, Apprximate Augmented Riemann, Hybrid (f-wave + augmented).
  *  (details can be found in the corresponding source files)
  */
-class SWE_WaveAccumulationBlock: public SWE_Block {
+class SWE_WaveAccumulationBlockIntrinsicTest: public SWE_Block {
 
 #if WAVE_PROPAGATION_SOLVER==2
     //! Approximate Augmented Riemann solver
     solver::AugRieFun<float> wavePropagationSolver;
 #elif WAVE_PROPAGATION_SOLVER==4
     //! Vectorized FWave solver
-    solver::FWaveVec<float> wavePropagationSolver;
+    solver::FWaveIntrinsicTrace<float> wavePropagationSolver;
+    solver::FWaveVecTrace<float> wavePropagationSolverOrig;
+   // solver::FWaveVec<float> wavePropagationSolverOrig;
 #endif
 
     //! net-updates for the heights of the cells (for accumulation)
@@ -78,9 +81,9 @@ class SWE_WaveAccumulationBlock: public SWE_Block {
 
   public:
     //constructor of a SWE_WaveAccumulationBlock.
-    SWE_WaveAccumulationBlock(int l_nx, int l_ny, float l_dx, float l_dy);
+    SWE_WaveAccumulationBlockIntrinsicTest(int l_nx, int l_ny, float l_dx, float l_dy);
     //destructor of a SWE_WaveAccumulationBlock.
-    virtual ~SWE_WaveAccumulationBlock() {}
+    virtual ~SWE_WaveAccumulationBlockIntrinsicTest() {}
 
     //computes the net-updates for the block
     void computeNumericalFluxes();

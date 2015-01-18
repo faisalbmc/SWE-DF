@@ -66,6 +66,7 @@ vars = collections.OrderedDict({
     'solver' : ['fwave', 'augrie', 'hybrid', 'fwavevec'],
     'vectorize' : ['on', 'off'],
     'libSDLDir' : ['/work/local'],
+     'useBlock' : ['propagation', 'accumulation', 'intr-test'],
 })
 
 # Run scons with all combinations

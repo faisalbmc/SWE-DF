@@ -95,11 +95,17 @@ class Float2D {
      * @param _rows rumber of rows (i.e., elements in vertical directions)
      */
     Float2D(int _cols, int _rows, bool _allocateMemory = true):
+
       rows(_rows),
       cols(_cols),
       allocateMemory(_allocateMemory) {
+
       if (_allocateMemory) {
-        elem = new float[rows*cols];
+        //This was inserted to place memory access
+    	  elem = (float*) _mm_malloc(rows*cols*sizeof(float), 64);
+    	  printf("%d %d %d assigned matrix\n",rows*cols,rows,cols);
+          	elem=	new float[rows*cols];
+
       }
 	  }
 
@@ -113,10 +119,12 @@ class Float2D {
      * @param _elem pointer to a suitably allocated region of memory to be used for thew array elements
      */
     Float2D(int _cols, int _rows, float* _elem):
-      rows(_rows),
+
+    	rows(_rows),
       cols(_cols),
       allocateMemory(false) {
 		  elem = _elem;
+		  std::cout << "ctor2"  ;
 	  }
 
 
@@ -130,15 +138,17 @@ class Float2D {
      * @param _elem pointer to a suitably allocated region of memory to be used for thew array elements
      */
     Float2D(Float2D& _elem, bool shallowCopy):
-      rows(_elem.rows),
+    	rows(_elem.rows),
       cols(_elem.cols),
       allocateMemory(!shallowCopy) {
+    	std::cout << "ctor 3 \n";
       if (shallowCopy) {
         elem = _elem.elem;
         allocateMemory = false;
       }
       else {
-        elem = new float[rows*cols];
+    	elem = new float[rows*cols];
+    	//elem=  &myMatrix;
         for (int i=0; i<rows*cols; i++) {
           elem[i] = _elem.elem[i];
         }

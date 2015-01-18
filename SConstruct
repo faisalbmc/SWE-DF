@@ -99,6 +99,11 @@ vars.AddVariables(
   EnumVariable( 'solver', 'Riemann solver', 'augrie',
                 allowed_values=('rusanov', 'fwave', 'augrie', 'hybrid', 'fwavevec', 'augriefun', 'augrie_simd')
               ),
+  
+  EnumVariable( 'useBlock', 'specifies which kind of block class to use','accumulation',
+                allowed_values=('propagation', 'accumulation', 'intr-test','intrinsic')
+              ),
+
                   
   BoolVariable( 'vectorize', 'add pragmas to help vectorization (release only)', False ),
                   
@@ -210,9 +215,9 @@ elif env['compileMode'] == 'release':
 
   if env['compiler'] == 'gnu':
     env.Append(CCFLAGS=['-O3','-mtune=native'])
-
+#daniel: changed the output to show debug symbols and facilitate analysis with VTUNE
   elif env['compiler'] == 'intel':
-    env.Append(CCFLAGS=['-O2'])
+    env.Append(CCFLAGS=['-O2','-g'])
 
   else: # especially for env['compiler'] == 'cray'
     env.Append(CCFLAGS=['-O3'])
@@ -244,8 +249,10 @@ if env['openmp']:
   if env['compiler'] == 'intel':
     env.Append(CCFLAGS=['-openmp'])
     env.Append(LINKFLAGS=['-openmp'])
+    env.Append(CPPDEFINES=['LOOP_OPENMP'])
   if env['compiler'] == 'gnu':
     env.Append(CCFLAGS=['-fopenmp'])
+    env.Append(CPPDEFINES=['LOOP_OPENMP'])
   # cray: OpenMP turned on by default
   
 # Platform
@@ -330,6 +337,12 @@ if env['writeNetCDF'] == True:
     env.Append(CPPPATH=[env['netCDFDir']+'/include'])
     env.Append(LIBPATH=[os.path.join(env['netCDFDir'], 'lib')])
     env.Append(RPATH=[os.path.join(env['netCDFDir'], 'lib')])
+if env['useBlock'] == 'accumulation':
+	env.Append(CPPDEFINES=['BLOCK_MODE=2'])
+elif env['useBlock'] =='intrinsic':
+	env.Append(CPPDEFINES=['BLOCK_MODE=4'])
+	
+	
 
 # set the precompiler flags, includes and libraries for ASAGI
 if env['asagi'] == True:
