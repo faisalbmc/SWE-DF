@@ -80,13 +80,14 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 	// compute the net-updates for the vertical edges
 
 #ifdef LOOP_OPENMP
-#pragma omp parallel
-{
-	// thread-local maximum wave speed:
 	float l_maxWaveSpeed = (float) 0.;
 
+	// thread-local maximum wave speed:
+
+
 	// Use OpenMP for the outer loop
-	#pragma omp for
+#pragma omp parallel for reduction(max:l_maxWaveSpeed)
+
 #endif // LOOP_OPENMP
 	for(int i = 1; i < nx+2; i++) {
 		const int ny_end = ny+2;	// compiler might refuse to vectorize j-loop without this ...
@@ -160,7 +161,7 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 
 			#ifdef LOOP_OPENMP
 				//update the thread-local maximum wave speed
-				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxEdgeSpeed);
+				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxWaveSpeed);
 			#endif // LOOP_OPENMP
 		}
 	}
@@ -173,7 +174,7 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 	 */
 
 #ifdef LOOP_OPENMP // Use OpenMP for the outer loop
-	//#pragma omp for
+	#pragma omp parallel for reduction(max:l_maxWaveSpeed)
 #endif // LOOP_OPENMP
 	for(int i = 1; i < nx+2; i++) {
 		const int ny_end = ny+2;	// compiler refused to vectorize j-loop without this ...
@@ -249,10 +250,8 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 
 			#ifdef LOOP_OPENMP
 				//update the thread-local maximum wave speed
-				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxEdgeSpeed[0]);
-			#else // LOOP_OPENMP
-				//update the maximum wave speed
-				maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed[0]);
+				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxWaveSpeed);
+
 			#endif // LOOP_OPENMP
 
 
@@ -260,14 +259,16 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 	}
 	flops += 58*ny*nx;
 
-#ifdef LOOP_OPENMP
-	#pragma omp critical
+//this is removed because of the use of reduce
+	#ifdef LOOP_OPENMP
+	//#pragma omp critical
 	{
 		maxWaveSpeed = std::max(l_maxWaveSpeed, maxWaveSpeed);
 	}
+	#endif
 
-} // #pragma omp parallel
-#endif
+ // #pragma omp parallel
+//#endif
 
 	if(maxWaveSpeed > 0.00001) {
 		//TODO zeroTol

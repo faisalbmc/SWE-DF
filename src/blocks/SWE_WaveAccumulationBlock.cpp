@@ -72,6 +72,13 @@ void SWE_WaveAccumulationBlock::computeNumericalFluxes() {
 	//maximum (linearized) wave speed within one iteration
 	float maxWaveSpeed = (float) 0.;
 
+	printf("init real %p \n",&h[0][0]);
+	printf("init real %p \n",&hu[0][0]);
+	printf("init real %p \n",&b[0][0]);
+	printf("init real %p \n",&hv[0][0]);
+
+
+
 	// compute the net-updates for the vertical edges
 
 #ifdef LOOP_OPENMP
