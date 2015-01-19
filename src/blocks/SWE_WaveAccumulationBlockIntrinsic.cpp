@@ -152,10 +152,15 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 
 			float maxspeeds[VEC_SIZE] __attribute__((aligned(64)));
 
-			_mm256_store_ps(maxspeeds,o_maxWaveSpeedi);
+			_mm256_storeu_ps(maxspeeds,o_maxWaveSpeedi);
 
 			for(int x=0; x<VEC_SIZE; x++){
-					maxWaveSpeed = std::max(maxWaveSpeed, maxspeeds[x]);
+				#ifdef LOOP_OPENMP
+				//update the thread-local maximum wave speed
+				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxspeeds[x]);
+				#else
+				maxWaveSpeed = std::max(maxWaveSpeed, maxspeeds[x]);
+				#endif // LOOP_OPENMP
 			}
 
 
@@ -240,30 +245,27 @@ void SWE_WaveAccumulationBlockIntrinsic::computeNumericalFluxes() {
 
 			float maxspeeds[VEC_SIZE] __attribute__((aligned(64)));
 
-			_mm256_store_ps(maxspeeds,o_maxWaveSpeedi);
+			_mm256_storeu_ps(maxspeeds,o_maxWaveSpeedi);
 
 			for(int x=0; x<VEC_SIZE; x++){
-				maxWaveSpeed = std::max(maxWaveSpeed, maxspeeds[x]);
-			}
-
-
-
-			#ifdef LOOP_OPENMP
+				#ifdef LOOP_OPENMP
 				//update the thread-local maximum wave speed
-				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxWaveSpeed);
-
-			#endif // LOOP_OPENMP
+				l_maxWaveSpeed = std::max(l_maxWaveSpeed, maxspeeds[x]);
+				#else
+				maxWaveSpeed = std::max(maxWaveSpeed, maxspeeds[x]);
+				#endif // LOOP_OPENMP
+			}
 
 
 			}
 	}
 	flops += 58*ny*nx;
 
-//this is removed because of the use of reduce
+
 	#ifdef LOOP_OPENMP
 	//#pragma omp critical
 	{
-		maxWaveSpeed = std::max(l_maxWaveSpeed, maxWaveSpeed);
+		maxWaveSpeed = l_maxWaveSpeed;
 	}
 	#endif
 
