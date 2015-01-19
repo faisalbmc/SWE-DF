@@ -1,0 +1,48 @@
+
+Begin optimization report for: SWE_WaveAccumulationBlock::computeNumericalFluxes(SWE_WaveAccumulationBlock *)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(86,2)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(92,3)
+      remark #15301: SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(92,3)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(127,2)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(133,3)
+      remark #15301: SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(133,3)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: SWE_WaveAccumulationBlock::updateUnknowns(SWE_WaveAccumulationBlock *, float)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(199,2)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(205,3)
+      remark #15301: SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at src/blocks/SWE_WaveAccumulationBlock.cpp(205,3)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================

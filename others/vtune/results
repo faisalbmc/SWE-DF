@@ -1,0 +1,33 @@
+The number of FLOPs: 3928024128.000000
+Time with clock(): 26.849945
+Time with timeofday(): 26.859907
+FLOPS with clock(): 146295425.484112
+FLOPS with timeofday: 146241166.359958
+		     1144467816.410775
+147333804.438531
+1144467816.410775
+
+
+supermic
+
+serial 
+
+Time left:      < 1 sec (100% done) [========================================] /The number of FLOPs: 3753013152.000000
+Time with clock(): 3.480000
+Time with timeofday(): 3.553967
+GFLOPS with clock(): 1.078452
+GFLOPS with timeofday: 1.056007
+
+intrinsics
+Time left:      < 1 sec (100% done) [========================================] -The number of FLOPs: 3928024128.000000
+Time with clock(): 1.300000
+Time with timeofday(): 1.352340
+GFLOPS with clock(): 3.021557
+GFLOPS with timeofday: 2.904613
+
+vectorized
+The number of FLOPs: 3753013152.000000
+Time with clock(): 1.740000
+Time with timeofday(): 1.787549
+GFLOPS with clock(): 2.156904
+GFLOPS with timeofday: 2.099530

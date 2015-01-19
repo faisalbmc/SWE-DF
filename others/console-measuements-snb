@@ -1,0 +1,1467 @@
+daniel@goldenlinux:~$ ssh di29how@bungartz
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.2.0-58-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Sun Jan 18 11:42:13 CET 2015
+
+  System load:  0.0               Processes:           108
+  Usage of /:   3.8% of 76.78GB   Users logged in:     4
+  Memory usage: 8%                IP address for eth0: 131.159.37.62
+  Swap usage:   0%
+
+  Graph this data and manage this system at:
+    https://landscape.canonical.com/
+
+119 packages can be updated.
+81 updates are security updates.
+
+New release '14.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+Last login: Sun Jan 18 11:06:31 2015 from 101.195.eduroam.dynamic.rbg.tum.de
+di29how@vmbungartz8:~$ ls
+SWE_intel_release_none_fwavevec  hpc-df-swe	   r001hs
+backyard			 hpcintr.tgz
+di29how@supermuc.lrz.de		 initial-versions
+di29how@vmbungartz8:~$ ssh -Y di29how@supermuc.lrz.de 
+           +--------------------------------------------------------+
+           |      Welcome to the SuperMUC 3-Petaflop system         |
+           |                 18 Thin Node Islands:                  |
+           |     - 147456 Sandy Bridge EP cores, 3185 TFlop/s -     |
+           |                         and                            |
+           |                  1 Fat Node Island:                    |
+           |         - 8200 Westmere EX cores, 78 TFlop/s -         |
+           |                      operated by                       |
+           |   *** Leibniz Supercomputing Centre in Garching ***    |
+           +--------------------------------------------------------+
+           |     Please read the introductory documentation at      |
+           |     http://www.lrz.de/services/compute/supermuc        |
+           |   In case of problems please submit an incident via    |
+           |               https://servicedesk.lrz.de/              |
+           +--------------------------------------------------------+
+--------------------------------------------------------------------------------
+ Please do not run or test jobs on any login node directly, since the 
+ cores available there are shared with all other users. Instead, reserve some
+ CPUs exclusively for your interactive work by using "llrun". Please refer
+ to the section on interactive job submission in the web documentation at
+ http://www.lrz-muenchen.de/services/compute/supermuc/loadleveler
+--------------------------------------------------------------------------------
+Jan 16, 2015:
+  The maintenance has been successfully concluded. Note that the Loadleveler
+  bug that caused incorrect resource assignments should now be fixed. 
+  Please report to the Service Desk if you still run into problems with this.
+--------------------------------------------------------------------------------
+
+DISK GROUP QUOTAS for home and project file systems:
+Filesystem                                 Quota     Used Space     Free Space
+/home/hpc/pr84fe          ($HOME)        100.0GB   18.9GB (19%)   81.1GB (81%)
+/gpfs/work/pr84fe         ($WORK)        900.0GB  512.0kB ( 0%)  900.0GB (100%)
+-------------------------------------------------------------------------------
+
+CPU GROUP BUDGETS:
+Project: pr84fe
+Project's Expiration Date:    2015-12-31
+Budget:                     Total [cpuh]        Used [cpuh]      Credit [cpuh]
+                                   50000            0 (0%)        50000 (100%)
+-------------------------------------------------------------------------------
+di29how@login06:~> icpc -o build/build_SWE_intel_release_none_fwavevec/blocks/SWE_WaveAccumulationBlockIntrinsic.o -c -fmessage-length=0 -O2 -g -fstrict-aliasing -fargument-noalias -DNDEBUG -DWAVE_PROPAGATION_SOLVER=4 -DWRITENETCDF -DBLOCK_MODE=4 -DBLOCK_MODE=4 -Ibuild/build_SWE_intel_release_none_fwavevec -Isrc -Ibuild/build_SWE_intel_release_none_fwavevec/include -Isrc/include src/blocks/SWE_WaveAccumulationBlockIntrinsic
+di29how@login06:~> ssh supermic.supermuc.lrz.de
+ssh: Could not resolve hostname supermic.supermuc.lrz.de: Name or service not known
+di29how@login06:~> ssh supermic.smuc.lrz.de
+           +--------------------------------------------------------+
+           |       Welcome to the 75 TFlop/s SuperMIC system        |
+           |                                                        |
+           |        - 32 Intel Xeon Ivy-Bridge compute nodes -      |
+           |                         and                            |
+           | - 64 Intel Xeon Phi coprocessors each with 60 cores -  |     
+           |                      operated by                       |
+           |   *** Leibniz Supercomputing Centre in Garching ***    |
+           +--------------------------------------------------------+
+           |     Please read the introductory documentation at      |
+           |  http://www.lrz.de/services/compute/supermuc/supermic  |
+           |   In case of problems please submit an incident via    |
+           |               https://servicedesk.lrz.de/              |
+           +--------------------------------------------------------+
+--------------------------------------------------------------------------------
+ Please do not run or test jobs on the SuperMIC login node directly, since the 
+ cores available there are shared with all other users.
+
+--------------------------------------------------------------------------------
+Aug 25, 2014:
+  likwid  (Lightweight performance tools) 3.1 https://code.google.com/p/likwid/
+  is now available on the MIC coprocessors.
+  Login interactively to a MIC coprocessor and run "module load likwid"
+  to set up the environment.
+--------------------------------------------------------------------------------
+Sep 25, 2014
+  Intel Amplifier XE 2015 has been enabled for SuperMIC. 
+  The new Sampling Enabling Product (SEP) kernel modules are now loaded on the 
+  compute nodes and MIC coprocessors per default.
+
+  To detect hotspots on the MIC run something similar to the following:
+  # module load amplifier_xe/2015
+  # scp program-mic i01r13a05-mic0:
+  # amplxe-cl --collect knc-hotspots -r outputdir /usr/bin/ssh i01r13a05-mic0 /home/lu65fok/program-mic
+
+  To use SEP directly, use a command like (preferrably under /scratch)
+  # module load amplifier_xe/2015
+  # sep -start -mic -verbose -out test  -app /usr/bin/ssh -args "lu65fok@i01r13c01-mic0 /home/lu65fok/micapp"
+  to sample on the MIC.
+  To convert tb6 Files to amplxe and view within Amplifier XE use 
+  (on login node):
+  # amplxe-cl -import test.tb6 -r test
+  # amplxe-gui  test 
+--------------------------------------------------------------------------------
+Oct 17, 2014:
+
+  Major Software Update and configuration change:
+  MPSS: 3.4-1 MLNX_OFED_LINUX-2.2-1.0.1.1 (OFED-2.2-1.0.0) 
+  Intel MPI: 5.0.1.035 Intel Compiler: composer_xe_2015.0.090
+
+  ccomp/intel/15.0, fortran/intel/15.0, mkl/11.1, mpi.intel/5.0 are now
+  loaded per default both on all SuperMIC nodes and coprocessors
+
+--------------------------------------------------------------------------------
+Oct 21, 2014:
+
+  The GNU Debugger with Intel extension is now also available on the MIC 
+  coprocessors to debug native code (host-mic?:/bin/gdb).
+
+--------------------------------------------------------------------------------
+
+Nov 4, 2014:
+
+  /home/hpc and /lrz/sys/ are now mounted per default via NFS on all MICs 
+  during coprocessor start-up. To offer a clean environment on the MICs, 
+  the default home-directory on the MICs is still the local /home/user.
+
+--------------------------------------------------------------------------------
+
+Last login: Sun Jan 18 10:31:46 2015 from login05.smuc.lrz.de
+di29how@login12:~> ls
+_00.nc     def-versions      job1.ll         profiles      swe      utput_00.nc
+15th.txt   hpc-df-swe        job.ll          profiles.tar  swe.tar  vtune
+8thrs.txt  hpcintr.tgz       jobs            scalab-enh    test
+all.tar    initial-versions  openmpstock.ll  src1.tar      thrash
+code1      intel             pi              src.tar       tree
+di29how@login12:~> llq
+Id                       Owner      Submitted   ST PRI Class        Running On 
+------------------------ ---------- ----------- -- --- ------------ -----------
+i01xcat3-ib.25880.0      di29how     1/18 10:33 R  50  phi          i01r13a12-ib
+i01xcat3-ib.25881.0      di29wij     1/18 10:37 R  50  phi          i01r13c11-ib
+
+2 job step(s) in queue, 0 waiting, 0 pending, 2 running, 0 held, 0 preempted
+di29how@login12:~> ssh  i01r13a12-ib
+Last login: Sun Jan 18 11:34:35 2015 from login12-ib
+
+di29how@i01r13a12:~> 
+di29how@i01r13a12:~> i01r13a12-ib
+If 'i01r13a12-ib' is not a typo you can run the following command to lookup the package that contains the binary:
+    command-not-found i01r13a12-ib
+-bash: i01r13a12-ib: command not found
+di29how@i01r13a12:~> /app/intel/vtune_amplifier_xe_2015.1.1.380310/bin64/amplxe-cl -collect hotspots -app-working-dir /home/daniel/workspace/hpc-df-swe/Debug -- /home/daniel/workspace/hpc-df-swe/Debug/hpc-df-swe -x 200 -y 200 -o ./
+-bash: /app/intel/vtune_amplifier_xe_2015.1.1.380310/bin64/amplxe-cl: No such file or directory
+di29how@i01r13a12:~> module load amplifier_xe
+di29how@i01r13a12:~> amplxe-cl -collect hotspots -app-working-dir hpc-df-swe/build  -- hpc-df-swe/build/intrinsic -x 399 -y 399 -o ./amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r000hs -command stop.
+amplxe: Error: Binary `hpc-df-swe/build/intrinsic' cannot be executed. Suggestion: Make sure the file exists, specified location is correct, and you have privileges to run the file.
+amplxe: Collection failed.
+di29how@i01r13a12:~> amplxe-cl -collect hotspots -app-working-dir hpc-df-swe/build  -- ~/hpc-df-swe/build/intrinsic -x 399 -y 399 -o ./
+amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r001hs -command stop.
+
+*************************************************************
+Welcome to SWE
+
+SWE Copyright (C) 2012-2013
+  Technische Universitaet Muenchen
+  Department of Informatics
+  Chair of Scientific Computing
+  http://www5.in.tum.de/SWE
+
+SWE comes with ABSOLUTELY NO WARRANTY.
+SWE is free software, and you are welcome to redistribute it
+under certain conditions.
+Details can be found in the file 'gpl.txt'.
+*************************************************************
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+Sun Jan 18 11:48:49 2015	Writing output file at time: 0 seconds
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 11:48:51 2015	Everything is set up, starting the simulation.
+------------------------------------------------------------------
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.0826432 seconds.          
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.138038 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.167903 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.179234 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.181779 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182045 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.283271 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.384487 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.519786 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.621003 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.722222 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.823439 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 0.924655 seconds.           
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.02587 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.12709 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.2283 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.3295 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.43041 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.52756 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.60625 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.65336 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.67504 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68264 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68411 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.78547 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.88669 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 1.9879 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.08911 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.18892 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.28742 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.37978 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.45264 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.51071 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.5472 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.56571 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57172 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57281 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.67411 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.77533 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.87654 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 2.97776 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.07898 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.18019 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.28141 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.44984 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.55106 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65227 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65274 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.75398 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.8552 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 3.95642 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.05763 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.15885 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.26007 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.36129 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.4625 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.56372 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.66494 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.76615 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.86737 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 4.96859 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.0698 seconds.             
+Sun Jan 18 11:48:51 2015        Writing output file at time: 5.0698 seconds     
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.17102 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.27224 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.37345 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.47467 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.57589 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.6771 seconds.             
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.77832 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.87954 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 5.98075 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.08197 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.10333 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.11269 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.11536 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.11577 seconds.            
+Sun Jan 18 11:48:51 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.217 seconds.              
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.31822 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.41944 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.52065 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.62187 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.72309 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.8243 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 6.92552 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.02674 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.12795 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.22917 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.33039 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.4316 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.53282 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.63404 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.73525 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.83647 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 7.93769 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.0389 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.14012 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.24134 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.34256 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.44377 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.54499 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.64621 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.74743 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.84864 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 8.94986 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.05108 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.15229 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.25351 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.35473 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.45595 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.55716 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.65838 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.7596 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.86082 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 9.96203 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.0632 seconds.            
+Sun Jan 18 11:48:52 2015        Writing output file at time: 10.0632 seconds    
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.1645 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.2657 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.3669 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.4681 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.5693 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.6706 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.7718 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.873 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 10.9742 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.0754 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.1766 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.2779 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.3791 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.4803 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.5815 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.6827 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.7839 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.8852 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 11.9864 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.0876 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.1888 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.29 seconds.              
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.3912 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.4925 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.5937 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.6949 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.7961 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.8973 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 12.9986 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.0998 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.201 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.3022 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.4034 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.5046 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.6059 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.7071 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.8083 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 13.9095 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.0107 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.1119 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.2132 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.3144 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.4156 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.5168 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.618 seconds.             
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.7192 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.8205 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 14.9217 seconds.            
+Sun Jan 18 11:48:52 2015        Simulation at time: 15.0229 seconds.            
+Sun Jan 18 11:48:52 2015        Writing output file at time: 15.0229 seconds    
+Time left:      < 1 sec (100% done) [========================================] -The number of FLOPs: 3928024128.000000
+Time with clock(): 1.400000
+Time with timeofday(): 1.350351
+GFLOPS with clock(): 2.805732
+GFLOPS with timeofday: 2.908891
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 11:48:52 2015	Simulation finished. Printing statistics for each process.
+------------------------------------------------------------------
+Sun Jan 18 11:48:52 2015	process 0 - CPU time: 1.73 seconds
+Sun Jan 18 11:48:52 2015	process 0 - wall clock time: 1 seconds
+Sun Jan 18 11:48:52 2015	202 iterations done
+
+*************************************************************
+SWE finished successfully.
+*************************************************************
+amplxe: Collection stopped.
+amplxe: Using result path `/home/hpc/pr84fe/di29how/r001hs'
+amplxe: Executing actions 17 % Resolving information for `libstdc++.so.6.0.17' 
+amplxe: Warning: Cannot locate debugging symbols for file `/usr/lib64/libstdc++.so.6.0.17'.
+amplxe: Warning: Cannot locate debugging symbols for file `/lib64/libc-2.11.3.so'.
+amplxe: Executing actions 50 % Generating a report                             
+
+Collection and Platform Info
+----------------------------
+Parameter                 r001hs                                                                                  
+------------------------  ----------------------------------------------------------------------------------------
+Application Command Line  /home/hpc/pr84fe/di29how/hpc-df-swe/build/intrinsic "-x" "399" "-y" "399" "-o" "./"     
+Operating System          3.0.76-0.11-default SUSE Linux Enterprise Server 11 (x86_64)
+VERSION = 11
+PATCHLEVEL = 3
+Computer Name             i01r13a12                                                                               
+Result Size               1988012                                                                                 
+Collection start time     10:48:47 18/01/2015 UTC                                                                 
+Collection stop time      10:48:52 18/01/2015 UTC                                                                 
+
+CPU
+---
+Parameter          r001hs                             
+-----------------  -----------------------------------
+Name               Intel(R) Xeon(R) E5/E7 v2 processor
+Frequency          2599998973                         
+Logical CPU Count  32                                 
+
+Summary
+-------
+Elapsed Time:       2.770
+CPU Time:           2.400
+Average CPU Usage:  0.865
+amplxe: Executing actions 100 % done                                           
+di29how@i01r13a12:~> ls
+_00.nc        hpc-df-swe        jobs            r001hs      test
+15th.txt      hpcintr.tgz       openmpstock.ll  scalab-enh  thrash
+8thrs.txt     initial-versions  pi              src1.tar    tree
+all.tar       intel             profiles        src.tar     utput_00.nc
+code1         job1.ll           profiles.tar    swe         vtune
+def-versions  job.ll            r000hs-bad      swe.tar
+di29how@i01r13a12:~> ls -l
+total 265156
+-rw-r--r--  1 di29how pr84fe 101282116 Jan 11 11:24 _00.nc
+-rw-r--r--  1 di29how pr84fe       608 Jan 11 11:05 15th.txt
+-rw-r--r--  1 di29how pr84fe     26924 Jan 11 11:05 8thrs.txt
+-rw-r--r--  1 di29how pr84fe    438553 Nov 30 21:25 all.tar
+drwxr-sr-x  2 di29how pr84fe      4096 Jan 17 15:11 code1
+drwxr-sr-x  2 di29how pr84fe      4096 Jan 11 12:33 def-versions
+drwxr-sr-x 10 di29how pr84fe      4096 Jan 18 11:31 hpc-df-swe
+-rw-r--r--  1 di29how pr84fe  24649113 Jan 18 11:07 hpcintr.tgz
+drwxrwxr-x  5 di29how pr84fe      4096 Jan 10 11:37 initial-versions
+drwxr-sr-x  4 di29how pr84fe      4096 Dez 23 11:48 intel
+-rw-r--r--  1 di29how pr84fe      1093 Jan 11 11:30 job1.ll
+-rw-r--r--  1 di29how pr84fe       479 Dez 13 13:48 job.ll
+drwxr-sr-x  2 di29how pr84fe      4096 Jan 18 10:33 jobs
+-rw-r--r--  1 di29how pr84fe      1110 Jan 11 11:34 openmpstock.ll
+drwxr-sr-x  2 di29how pr84fe      4096 Nov 30 21:37 pi
+drwxr-sr-x  5 di29how pr84fe      4096 Jan 10 09:13 profiles
+-rw-r--r--  1 di29how pr84fe   2716599 Jan 10 09:35 profiles.tar
+drwxr-sr-x  4 di29how pr84fe      4096 Jan 18 11:48 r000hs-bad
+drwxr-sr-x  6 di29how pr84fe      4096 Jan 18 11:48 r001hs
+-rw-r--r--  1 di29how pr84fe       165 Jan 11 11:14 scalab-enh
+-rw-r--r--  1 di29how pr84fe    207036 Dez 13 08:27 src1.tar
+-rw-r--r--  1 di29how pr84fe     28050 Dez 10 17:21 src.tar
+drwxr-sr-x  9 di29how pr84fe      4096 Jan 18 11:23 swe
+-rw-r--r--  1 di29how pr84fe  15511150 Dez 30 22:39 swe.tar
+drwxr-sr-x  2 di29how pr84fe      4096 Dez  1 11:27 test
+drwxr-sr-x  6 di29how pr84fe      4096 Dez 23 11:44 thrash
+drwxr-sr-x  3 di29how pr84fe      8192 Dez 13 08:29 tree
+-rw-r--r--  1 di29how pr84fe 125465716 Jan 11 08:36 utput_00.nc
+drwxr-sr-x  3 di29how pr84fe      4096 Dez 23 11:46 vtune
+di29how@i01r13a12:~> amplxe-cl -collect hotspots -app-working-dir hpc-df-swe/build  -- ~/hpc-df-swe/build/SWE_intel_ -x 399 -y 399 -o ./
+SWE_intel_omp
+SWE_intel_release_none_fwavevec
+SWE_intel_release_none_fwavevec_vec
+SWE_intel_release_none_fwavevec_vec_nocdf
+SWE_intel_release_stock_omp
+di29how@i01r13a12:~> amplxe-cl -collect hotspots -app-working-dir hpc-df-swe/build  -- ~/hpc-df-swe/build/SWE_intel_release_none_fwavevec_vec -x 399 -y 399 -o ./
+amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r002hs -command stop.
+
+*************************************************************
+Welcome to SWE
+
+SWE Copyright (C) 2012-2013
+  Technische Universitaet Muenchen
+  Department of Informatics
+  Chair of Scientific Computing
+  http://www5.in.tum.de/SWE
+
+SWE comes with ABSOLUTELY NO WARRANTY.
+SWE is free software, and you are welcome to redistribute it
+under certain conditions.
+Details can be found in the file 'gpl.txt'.
+*************************************************************
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+Sun Jan 18 11:58:16 2015	Writing output file at time: 0 seconds
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 11:58:18 2015	Everything is set up, starting the simulation.
+------------------------------------------------------------------
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.0826432 seconds.          
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.162709 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.241379 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.319198 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.396441 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.473203 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.549675 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.625936 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.701985 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.777908 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.853755 seconds.           
+Sun Jan 18 11:58:18 2015        Simulation at time: 0.92956 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.00534 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.08112 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.15692 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.23273 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.30858 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.38445 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.46035 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.53625 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.61214 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.68803 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.76393 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.83984 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.91574 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 1.99162 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.06749 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.14337 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.21924 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.29509 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.37092 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.44675 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.52258 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.59838 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.67417 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.74995 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.82572 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.90148 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 2.97722 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.05294 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.12866 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.20437 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.28006 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.35573 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.4314 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.50705 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.58269 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.65831 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.73393 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.80954 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.88513 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 3.96071 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.03629 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.11185 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.1874 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.26294 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.33847 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.414 seconds.              
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.4895 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.565 seconds.              
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.6405 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.71599 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.79146 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.86692 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 4.94239 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.01784 seconds.            
+Sun Jan 18 11:58:18 2015        Writing output file at time: 5.01784 seconds    
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.09328 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.16872 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.24416 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.31959 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.39501 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.47043 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.54585 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.62126 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.69667 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.77209 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.8475 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.92291 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 5.99832 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.07374 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.14917 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.22459 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.30002 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.37547 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.45092 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.52637 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.60184 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.67733 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.75283 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.82835 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.90388 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 6.97944 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.05502 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.13061 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.20624 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.2819 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.3576 seconds.             
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.43332 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.50908 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.58489 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.66076 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.73666 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.81262 seconds.            
+Sun Jan 18 11:58:18 2015        Simulation at time: 7.88864 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 7.96472 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.04089 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.11712 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.19344 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.26985 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.34636 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.42299 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.49975 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.57664 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.65369 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.73091 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.80831 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.8859 seconds.             
+Sun Jan 18 11:58:19 2015        Simulation at time: 8.96371 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.04175 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.12004 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.19859 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.27742 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.35653 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.43592 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.51557 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.59541 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.67538 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.7554 seconds.             
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.83546 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.91556 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 9.99571 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.0759 seconds.            
+Sun Jan 18 11:58:19 2015        Writing output file at time: 10.0759 seconds    
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.1561 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.2364 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.3167 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.3971 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.4775 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.5579 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.6384 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.7189 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.7995 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.8801 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 10.9607 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.0414 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.1221 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.2029 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.2837 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.3645 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.4453 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.5263 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.6072 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.6882 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.7692 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.8502 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 11.9313 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.0125 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.0936 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.1748 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.256 seconds.             
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.3373 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.4186 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.4999 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.5813 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.6627 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.7442 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.8256 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.9071 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 12.9887 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.0702 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.1519 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.2335 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.3152 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.3969 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.4786 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.5604 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.6422 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.724 seconds.             
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.8059 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.8878 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 13.9698 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.0517 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.1337 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.2158 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.2979 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.38 seconds.              
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.4621 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.5443 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.6265 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.7087 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.7909 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.8732 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 14.9556 seconds.            
+Sun Jan 18 11:58:19 2015        Simulation at time: 15.0379 seconds.            
+Sun Jan 18 11:58:19 2015        Writing output file at time: 15.0379 seconds    
+Time left:      < 1 sec (100% done) [========================================] /The number of FLOPs: 3753013152.000000
+Time with clock(): 1.800000
+Time with timeofday(): 1.786150
+GFLOPS with clock(): 2.085007
+GFLOPS with timeofday: 2.101175
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 11:58:19 2015	Simulation finished. Printing statistics for each process.
+------------------------------------------------------------------
+Sun Jan 18 11:58:19 2015	process 0 - CPU time: 2.31 seconds
+Sun Jan 18 11:58:19 2015	process 0 - wall clock time: 1 seconds
+Sun Jan 18 11:58:19 2015	193 iterations done
+
+*************************************************************
+SWE finished successfully.
+*************************************************************
+amplxe: Collection stopped.
+amplxe: Using result path `/home/hpc/pr84fe/di29how/r002hs'
+amplxe: Executing actions 16 % Resolving information for `SWE_intel_release_non
+amplxe: Warning: Cannot locate debugging symbols for file `/usr/lib64/libstdc++.so.6.0.17'.
+amplxe: Warning: Cannot locate debugging symbols for file `/lib64/libc-2.11.3.so'.
+amplxe: Executing actions 50 % Generating a report                             
+
+Collection and Platform Info
+----------------------------
+Parameter                 r002hs                                                                                                        
+------------------------  --------------------------------------------------------------------------------------------------------------
+Application Command Line  /home/hpc/pr84fe/di29how/hpc-df-swe/build/SWE_intel_release_none_fwavevec_vec "-x" "399" "-y" "399" "-o" "./" 
+Operating System          3.0.76-0.11-default SUSE Linux Enterprise Server 11 (x86_64)
+VERSION = 11
+PATCHLEVEL = 3                      
+Computer Name             i01r13a12                                                                                                     
+Result Size               2004930                                                                                                       
+Collection start time     10:58:16 18/01/2015 UTC                                                                                       
+Collection stop time      10:58:19 18/01/2015 UTC                                                                                       
+
+CPU
+---
+Parameter          r002hs                             
+-----------------  -----------------------------------
+Name               Intel(R) Xeon(R) E5/E7 v2 processor
+Frequency          2599999066                         
+Logical CPU Count  32                                 
+
+Summary
+-------
+Elapsed Time:       3.204
+CPU Time:           2.820
+Average CPU Usage:  0.881
+amplxe: Executing actions 100 % done                                           
+di29how@i01r13a12:~> amplxe-cl -collect general-exploration -app-working-dir hpc-df-swe/build  -- hpc-df-swe/build/intrinsic -x 399 -y 399 -o ./
+amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r003ge -command stop.
+amplxe: Error: Binary `hpc-df-swe/build/intrinsic' cannot be executed. Suggestion: Make sure the file exists, specified location is correct, and you have privileges to run the file.
+amplxe: Collection failed.
+di29how@i01r13a12:~> amplxe-cl -collect general-exploration -app-working-dir hpc-df-swe/build  -- ~/hpc-df-swe/build/intrinsic -x 399 -y 399 -o ./
+amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r004ge -command stop.
+amplxe: Warning: To enable hardware event-base[d] sampling, VTune Amplifier has disabled the NMI watchdog timer. The watchdog timer will be re-enabled after collection completes.
+
+*************************************************************
+Welcome to SWE
+
+SWE Copyright (C) 2012-2013
+  Technische Universitaet Muenchen
+  Department of Informatics
+  Chair of Scientific Computing
+  http://www5.in.tum.de/SWE
+
+SWE comes with ABSOLUTELY NO WARRANTY.
+SWE is free software, and you are welcome to redistribute it
+under certain conditions.
+Details can be found in the file 'gpl.txt'.
+*************************************************************
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+Sun Jan 18 12:03:17 2015	Writing output file at time: 0 seconds
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 12:03:19 2015	Everything is set up, starting the simulation.
+------------------------------------------------------------------
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.0826432 seconds.          
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.138038 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.167903 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.179234 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.181779 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182045 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.283271 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.384487 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.519786 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.621003 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.722222 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.823439 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 0.924655 seconds.           
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.02587 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.12709 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.2283 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.3295 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.43041 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.52756 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.60625 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.65336 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.67504 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68264 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68411 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.78547 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.88669 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 1.9879 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.08911 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.18892 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.28742 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.37978 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.45264 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.51071 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.5472 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.56571 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57172 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57281 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.67411 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.77533 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.87654 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 2.97776 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.07898 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.18019 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.28141 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.44984 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.55106 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65227 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65274 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.75398 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.8552 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 3.95642 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.05763 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.15885 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.26007 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.36129 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.4625 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.56372 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.66494 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.76615 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.86737 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 4.96859 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.0698 seconds.             
+Sun Jan 18 12:03:19 2015        Writing output file at time: 5.0698 seconds     
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.17102 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.27224 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.37345 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.47467 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.57589 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.6771 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.77832 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.87954 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 5.98075 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.08197 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.10333 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11269 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11536 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11577 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.217 seconds.              
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.31822 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.41944 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.52065 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.62187 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.72309 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.8243 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 6.92552 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.02674 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.12795 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.22917 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.33039 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.4316 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.53282 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.63404 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.73525 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.83647 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 7.93769 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.0389 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.14012 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.24134 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.34256 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.44377 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.54499 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.64621 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.74743 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.84864 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 8.94986 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.05108 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.15229 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.25351 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.35473 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.45595 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.55716 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.65838 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.7596 seconds.             
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.86082 seconds.            
+Sun Jan 18 12:03:19 2015        Simulation at time: 9.96203 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.0632 seconds.            
+Sun Jan 18 12:03:20 2015        Writing output file at time: 10.0632 seconds    
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.1645 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.2657 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.3669 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.4681 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.5693 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.6706 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.7718 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.873 seconds.             
+Sun Jan 18 12:03:20 2015        Simulation at time: 10.9742 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.0754 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.1766 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.2779 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.3791 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.4803 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.5815 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.6827 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.7839 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.8852 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 11.9864 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.0876 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.1888 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.29 seconds.              
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.3912 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.4925 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.5937 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.6949 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.7961 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.8973 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 12.9986 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.0998 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.201 seconds.             
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.3022 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.4034 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.5046 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.6059 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.7071 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.8083 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 13.9095 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.0107 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.1119 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.2132 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.3144 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.4156 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.5168 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.618 seconds.             
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.7192 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.8205 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 14.9217 seconds.            
+Sun Jan 18 12:03:20 2015        Simulation at time: 15.0229 seconds.            
+Sun Jan 18 12:03:20 2015        Writing output file at time: 15.0229 seconds    
+Time left:      < 1 sec (100% done) [========================================] -The number of FLOPs: 3928024128.000000
+Time with clock(): 1.320000
+Time with timeofday(): 1.375872
+GFLOPS with clock(): 2.975776
+GFLOPS with timeofday: 2.854934
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 12:03:20 2015	Simulation finished. Printing statistics for each process.
+------------------------------------------------------------------
+Sun Jan 18 12:03:20 2015	process 0 - CPU time: 1.69 seconds
+Sun Jan 18 12:03:20 2015	process 0 - wall clock time: 1 seconds
+Sun Jan 18 12:03:20 2015	202 iterations done
+
+*************************************************************
+SWE finished successfully.
+*************************************************************
+amplxe: Collection stopped.
+amplxe: Using result path `/home/hpc/pr84fe/di29how/r004ge'
+amplxe: Executing actions 11 % Loading 'systemcollector-i01r13a12.sc' file     ^Cdi29how@i01r13a12:~> amplxe-cl -collect general-exploration -app-working-dir hp-df-swe/build  -- ~/hpc-df-swe/build/intrinsic -x 399 -y 399 -o ./
+amplxe: Collection started. To stop the collection, either press CTRL-C or enter from another console window: amplxe-cl -r /home/hpc/pr84fe/di29how/r005ge -command stop.
+amplxe: Warning: To enable hardware event-base[d] sampling, VTune Amplifier has disabled the NMI watchdog timer. The watchdog timer will be re-enabled after collection completes.
+
+*************************************************************
+Welcome to SWE
+
+SWE Copyright (C) 2012-2013
+  Technische Universitaet Muenchen
+  Department of Informatics
+  Chair of Scientific Computing
+  http://www5.in.tum.de/SWE
+
+SWE comes with ABSOLUTELY NO WARRANTY.
+SWE is free software, and you are welcome to redistribute it
+under certain conditions.
+Details can be found in the file 'gpl.txt'.
+*************************************************************
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+160801 401 401 assigned matrix
+Sun Jan 18 12:05:53 2015	Writing output file at time: 0 seconds
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 12:05:55 2015	Everything is set up, starting the simulation.
+------------------------------------------------------------------
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.0826432 seconds.          
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.138038 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.167903 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.179234 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.181779 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182045 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.182054 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.283271 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.384487 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.418569 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.519786 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.621003 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.621005 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.722222 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.823439 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 0.924655 seconds.           
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.02587 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.12709 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.2283 seconds.             
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.3295 seconds.             
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.43041 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.52756 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.60625 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.65336 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.67504 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68264 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68411 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.68425 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.78547 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.88669 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 1.9879 seconds.             
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.08911 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.18892 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.28742 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.37978 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.45264 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.51071 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.5472 seconds.             
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.56571 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57172 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57281 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.57289 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.67411 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.77533 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.87654 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 2.97776 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 3.07898 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 3.18019 seconds.            
+Sun Jan 18 12:05:55 2015        Simulation at time: 3.28141 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.34863 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.44984 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.55106 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65227 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65274 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.65277 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.75398 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.8552 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 3.95642 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.05763 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.15885 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.26007 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.36129 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.4625 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.56372 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.66494 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.76615 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.86737 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 4.96859 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.0698 seconds.             
+Sun Jan 18 12:05:56 2015        Writing output file at time: 5.0698 seconds     
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.17102 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.27224 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.37345 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.47467 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.57589 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.6771 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.77832 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.87954 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 5.98075 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.08197 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.10333 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11269 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11536 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11577 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.11579 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.217 seconds.              
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.31822 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.41944 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.52065 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.62187 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.72309 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.8243 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 6.92552 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.02674 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.12795 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.22917 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.33039 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.4316 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.53282 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.63404 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.73525 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.83647 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 7.93769 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.0389 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.14012 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.24134 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.34256 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.44377 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.54499 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.64621 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.74743 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.84864 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 8.94986 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.05108 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.15229 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.25351 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.35473 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.45595 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.55716 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.65838 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.7596 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.86082 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 9.96203 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.0632 seconds.            
+Sun Jan 18 12:05:56 2015        Writing output file at time: 10.0632 seconds    
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.1645 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.2657 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.3669 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.4681 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.5693 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.6706 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.7718 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.873 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 10.9742 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.0754 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.1766 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.2779 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.3791 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.4803 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.5815 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.6827 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.7839 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.8852 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 11.9864 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.0876 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.1888 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.29 seconds.              
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.3912 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.4925 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.5937 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.6949 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.7961 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.8973 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 12.9986 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.0998 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.201 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.3022 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.4034 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.5046 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.6059 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.7071 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.8083 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 13.9095 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.0107 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.1119 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.2132 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.3144 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.4156 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.5168 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.618 seconds.             
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.7192 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.8205 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 14.9217 seconds.            
+Sun Jan 18 12:05:56 2015        Simulation at time: 15.0229 seconds.            
+Sun Jan 18 12:05:56 2015        Writing output file at time: 15.0229 seconds    
+Time left:      < 1 sec (100% done) [========================================] -The number of FLOPs: 3928024128.000000
+Time with clock(): 1.400000
+Time with timeofday(): 1.375726
+GFLOPS with clock(): 2.805732
+GFLOPS with timeofday: 2.855237
+                                                                                
+------------------------------------------------------------------
+Sun Jan 18 12:05:56 2015	Simulation finished. Printing statistics for each process.
+------------------------------------------------------------------
+Sun Jan 18 12:05:56 2015	process 0 - CPU time: 1.75 seconds
+Sun Jan 18 12:05:56 2015	process 0 - wall clock time: 1 seconds
+Sun Jan 18 12:05:56 2015	202 iterations done
+
+*************************************************************
+SWE finished successfully.
+*************************************************************
+amplxe: Collection stopped.
+amplxe: Using result path `/home/hpc/pr84fe/di29how/r005ge'
+amplxe: Executing actions 16 % Resolving information for `ld-2.11.3.so'        
+amplxe: Warning: Cannot locate file `sep3_15.ko'.
+amplxe: Executing actions 17 % Resolving information for `libc-2.11.3.so'      
+amplxe: Warning: Cannot locate debugging symbols for file `/lib64/ld-2.11.3.so'.
+amplxe: Executing actions 17 % Resolving information for `intrinsic'           
+amplxe: Warning: Cannot locate debugging symbols for file `/usr/lib64/libstdc++.so.6.0.17'.
+amplxe: Warning: Cannot locate debugging symbols for file `/lib/modules/3.0.76-0.11-default/kernel/fs/nfs/nfs.ko'.
+amplxe: Warning: Cannot locate debugging symbols for file `/lib64/libc-2.11.3.so'.
+amplxe: Warning: Cannot locate file `/usr/lib/debug/lib/modules/3.0.76-0.11-default/vmlinux'.
+amplxe: Executing actions 50 % Generating a report                             
+
+General Exploration Metrics
+---------------------------
+Parameter                              r005ge        
+-------------------------------------  --------------
+Clockticks                             6236009354.000
+Instructions Retired                   7654011481    
+CPI Rate                               0.815         
+MUX Reliability                        0.745         
+Filled Pipeline Slots                  0.0           
+ Retiring                              0.305         
+  General Retirement                   0.271         
+   FP Arithmetic                       0.142         
+    FP x87                             0.003         
+    FP Scalar                          0.049         
+    FP Vector                          0.091         
+   Other                               0.780         
+  Microcode Sequencer                  0.033         
+ Bad Speculation                       0.019         
+  Branch Mispredict                    0             
+  Machine Clears                       0             
+Unfilled Pipeline Slots (Stalls)       0.0           
+ Back-End Bound                        0.371         
+  Memory Bound                         0.0           
+   L1 Bound                            0.121         
+    DTLB Overhead                      0.020         
+    Loads Blocked by Store Forwarding  0.023         
+    Split Loads                        0.0           
+    4K Aliasing                        0.178         
+   L3 Bound                            0             
+    Contested Accesses                 0.0           
+    Data Sharing                       0.0           
+    L3 Latency                         0.0           
+   DRAM Bound                          0             
+    Memory Bandwidth                   0.0           
+    Memory Latency                     0.006         
+    Local DRAM                         0.0           
+    Remote DRAM                        0.0           
+    Remote Cache                       0.0           
+   Store Bound                         0.000         
+    False Sharing                      0.0           
+    Split Stores                       0.010         
+    DTLB Store Overhead                0.0           
+  Core Bound                           0.0           
+   DIV Active                          0.104         
+   Port Utilization                    0.473         
+    Cycles of 0 Ports Utilized         0.254         
+    Cycles of 1 Port Utilized          0.283         
+    Cycles of 2 Ports Utilized         0.231         
+    Cycles of 3+ Ports Utilized        0.289         
+ Front-end Bound                       0.306         
+  Front-End Latency                    0.208         
+   ICache Misses                       0.092         
+   ITLB Overhead                       0.0           
+   Branch Resteers                     -0.0          
+   DSB Switches                        0.0           
+   Length Changing Prefixes            0.0           
+  Front-End Bandwidth                  0.098         
+   Front-End Bandwidth DSB             0.023         
+   Front-End Bandwidth MITE            0.237         
+
+Collection and Platform Info
+----------------------------
+Parameter                 r005ge                                                                                  
+------------------------  ----------------------------------------------------------------------------------------
+Application Command Line  /home/hpc/pr84fe/di29how/hpc-df-swe/build/intrinsic "-x" "399" "-y" "399" "-o" "./"     
+User Name                 di29how                                                                                 
+Operating System          3.0.76-0.11-default SUSE Linux Enterprise Server 11 (x86_64)
+VERSION = 11
+PATCHLEVEL = 3
+Computer Name             i01r13a12                                                                               
+Result Size               5080492                                                                                 
+Collection start time     11:05:53 18/01/2015 UTC                                                                 
+Collection stop time      11:05:56 18/01/2015 UTC                                                                 
+
+CPU
+---
+Parameter          r005ge                             
+-----------------  -----------------------------------
+Name               Intel(R) Xeon(R) E5/E7 v2 processor
+Frequency          2599998866                         
+Logical CPU Count  32                                 
+
+Summary
+-------
+Elapsed Time:       2.800
+CPU Time:           2.402
+Average CPU Usage:  0.873
+CPI Rate:           0.815
+
+Event summary
+-------------
+Hardware Event Type                                      Hardware Event Count:Self  Hardware Event Sample Count:Self  Events Per Sample
+-------------------------------------------------------  -------------------------  --------------------------------  -----------------
+CPU_CLK_UNHALTED.REF_TSC                                                6244009366                              3122  2000003          
+CPU_CLK_UNHALTED.THREAD                                                 6236009354                              3118  2000003          
+INST_RETIRED.ANY                                                        7654011481                              3827  2000003          
+OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.HITM_OTHER_CORE_0                            0                                 0  100003           
+L1D_PEND_MISS.PENDING                                                    144000216                                 4  2000003          
+CYCLE_ACTIVITY.STALLS_LDM_PENDING                                        756001134                                21  2000003          
+CYCLE_ACTIVITY.CYCLES_NO_EXECUTE                                        1584002376                                44  2000003          
+CYCLE_ACTIVITY.STALLS_L1D_PENDING                                                0                                 0  2000003          
+OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_MISS.ANY_DRAM_0                              0                                 0  100003           
+OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_DATA_RD                   36000054                                 1  2000003          
+OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD                                      0                                 0  2000003          
+FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE                                                0                                 0  2000003          
+FP_COMP_OPS_EXE.SSE_PACKED_SINGLE                                         72000108                                 2  2000003          
+SIMD_FP_256.PACKED_SINGLE                                                936001404                                26  2000003          
+SIMD_FP_256.PACKED_DOUBLE                                                        0                                 0  2000003          
+UOPS_EXECUTED.THREAD                                                   11124016686                               309  2000003          
+FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE                                        540000810                                15  2000003          
+FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE                                                0                                 0  2000003          
+FP_COMP_OPS_EXE.X87                                                       36000054                                 1  2000003          
+INST_RETIRED.PREC_DIST                                                  8820013230                               245  2000003          
+BACLEARS.ANY                                                                     0                                 0  100003           
+MACHINE_CLEARS.COUNT                                                             0                                 0  100003           
+LD_BLOCKS.NO_SR                                                                  0                                 0  100003           
+MEM_LOAD_UOPS_RETIRED.L1_MISS                                              1800054                                 1  100003           
+DSB2MITE_SWITCHES.PENALTY_CYCLES                                                 0                                 0  2000003          
+RS_EVENTS.EMPTY_END                                                       43200648                                12  200003           
+ICACHE.IFETCH_STALL                                                      576000864                                16  2000003          
+RS_EVENTS.EMPTY_CYCLES                                                   432000648                                12  2000003          
+RESOURCE_STALLS.SB                                                               0                                 0  2000003          
+DTLB_STORE_MISSES.WALK_DURATION                                                  0                                 0  2000003          
+DTLB_STORE_MISSES.STLB_HIT                                                       0                                 0  100003           
+MEM_LOAD_UOPS_RETIRED.LLC_MISS_PS                                                0                                 0  100007           
+IDQ.MS_UOPS                                                              864001296                                24  2000003          
+ILD_STALL.LCP                                                                    0                                 0  2000003          
+UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC                                      5004007506                               139  2000003          
+UOPS_EXECUTED.CYCLES_GE_2_UOPS_EXEC                                     3240004860                                90  2000003          
+CYCLE_ACTIVITY.STALLS_L2_PENDING                                                 0                                 0  2000003          
+UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC                                     1800002700                                50  2000003          
+IDQ.ALL_MITE_CYCLES_4_UOPS                                               468000702                                13  2000003          
+IDQ.ALL_MITE_CYCLES_ANY_UOPS                                            1944002916                                54  2000003          
+IDQ.ALL_DSB_CYCLES_4_UOPS                                                720001080                                20  2000003          
+IDQ.ALL_DSB_CYCLES_ANY_UOPS                                              864001296                                24  2000003          
+IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE                         1296001944                                36  2000003          
+ARITH.FPU_DIV_ACTIVE                                                     648000972                                18  2000003          
+BR_MISP_RETIRED.ALL_BRANCHES_PS                                                  0                                 0  400009           
+DTLB_LOAD_MISSES.WALK_DURATION                                            36000054                                 1  2000003          
+ICACHE.MISSES                                                             86401296                                24  200003           
+IDQ.MS_CYCLES                                                            324000486                                 9  2000003          
+IDQ_UOPS_NOT_DELIVERED.CORE                                             7632011448                               212  2000003          
+ITLB_MISSES.WALK_DURATION                                                        0                                 0  2000003          
+L1D.REPLACEMENT                                                                  0                                 0  2000003          
+L2_LINES_IN.ALL                                                           21600648                                12  100003           
+LD_BLOCKS.STORE_FORWARD                                                   10800324                                 6  100003           
+LD_BLOCKS_PARTIAL.ADDRESS_ALIAS                                          221406642                               123  100003           
+MACHINE_CLEARS.MASKMOV                                                           0                                 0  100003           
+MACHINE_CLEARS.MEMORY_ORDERING                                                   0                                 0  100003           
+MACHINE_CLEARS.SMC                                                               0                                 0  100003           
+MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM_PS                                       0                                 0  20011            
+MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT_PS                                        0                                 0  20011            
+MEM_LOAD_UOPS_LLC_MISS_RETIRED.LOCAL_DRAM                                        0                                 0  100007           
+MEM_LOAD_UOPS_RETIRED.LLC_HIT_PS                                                 0                                 0  50021            
+MEM_UOPS_RETIRED.ALL_STORES_PS                                           936001404                                26  2000003          
+MEM_UOPS_RETIRED.SPLIT_LOADS_PS                                           23400702                                13  100003           
+MEM_UOPS_RETIRED.SPLIT_STORES_PS                                           9000270                                 5  100003           
+DTLB_LOAD_MISSES.STLB_HIT                                                 12600378                                 7  100003           
+UOPS_ISSUED.ANY                                                         7920011880                               220  2000003          
+UOPS_RETIRED.RETIRE_SLOTS                                               7596011394                               211  2000003          
+INT_MISC.RECOVERY_CYCLES                                                  36000054                                 1  2000003          
+MEM_LOAD_UOPS_LLC_MISS_RETIRED.REMOTE_DRAM                                       0                                 0  100007           
+MEM_LOAD_UOPS_LLC_MISS_RETIRED.REMOTE_HITM                                       0                                 0  100007           
+MEM_LOAD_UOPS_LLC_MISS_RETIRED.REMOTE_FWD                                        0                                 0  100007           
+CPU_CLK_UNHALTED.THREAD_P                                               4644006966                               129  2000003          
+amplxe: Executing actions 100 % done                                           
+di29how@i01r13a12:~> ls
+_00.nc        hpcintr.tgz       pi            r004ge      test
+15th.txt      initial-versions  profiles      r005ge      thrash
+8thrs.txt     intel             profiles.tar  scalab-enh  tree
+all.tar       job1.ll           r000hs-bad    src1.tar    utput_00.nc
+code1         job.ll            r001hs        src.tar     vtune
+def-versions  jobs              r002hs        swe
+hpc-df-swe    openmpstock.ll    r003ge-bad    swe.tar
+di29how@i01r13a12:~> 
