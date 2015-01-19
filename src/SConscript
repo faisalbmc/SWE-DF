@@ -39,6 +39,8 @@ if env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
     sourceFiles = ['blocks/SWE_WavePropagationBlockSIMD.cpp']
   elif (env['solver'] == 'augriefun' or env['solver'] == 'fwavevec') and env['useBlock'] == 'accumulation' :
     sourceFiles = ['blocks/SWE_WaveAccumulationBlock.cpp']
+  elif (env['solver'] == 'augriefun' or env['solver'] == 'fwavevec') and env['useBlock'] == 'intr-mic' :
+  	sourceFiles = ['blocks/SWE_MICWaveAccumulationBlockIntrinsic.cpp']
   elif (env['solver'] == 'augriefun' or env['solver'] == 'fwavevec') and env['useBlock'] == 'intrinsic' :
   	sourceFiles = ['blocks/SWE_WaveAccumulationBlockIntrinsic.cpp']
   else:
@@ -48,6 +50,9 @@ if env['useBlock'] == 'accumulation':
 	env.Append(CPPDEFINES=['BLOCK_MODE=2'])
 elif env['useBlock'] =='intrinsic':
 	env.Append(CPPDEFINES=['BLOCK_MODE=4'])
+elif env['useBlock'] =='intr-mic':
+	env.Append(CPPDEFINES=['BLOCK_MODE=5'])
+	
 	
 # Code with CUDA
 else:

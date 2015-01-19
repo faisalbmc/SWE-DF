@@ -46,6 +46,8 @@
 #include "../blocks/SWE_WaveAccumulationBlockIntrinsicTest.hh"
 #elif BLOCK_MODE==4
 #include "../blocks/SWE_WaveAccumulationBlockIntrinsic.hh"
+#elif BLOCK_MODE==5
+#include "../blocks/SWE_MICWaveAccumulationBlockIntrinsic.hh"
 #endif
 
 
@@ -208,6 +210,9 @@ int main( int argc, char** argv ) {
      SWE_WaveAccumulationBlockIntrinsicTest l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
 	#elif BLOCK_MODE==4
      SWE_WaveAccumulationBlockIntrinsic l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+	#elif BLOCK_MODE==5
+     SWE_MICWaveAccumulationBlockIntrinsic l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
+
     #endif
 
 
@@ -306,6 +311,7 @@ int main( int argc, char** argv ) {
       timeOfDay = get_time();
 
       l_wavePropgationBlock.computeNumericalFluxes();
+
 
       totalTimeWithClock += get_ticks_diff_time(ticks);
       totalTimeWithTimeOfDay += get_ToD_diff_time(timeOfDay);

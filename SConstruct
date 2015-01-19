@@ -101,7 +101,7 @@ vars.AddVariables(
               ),
   
   EnumVariable( 'useBlock', 'specifies which kind of block class to use','accumulation',
-                allowed_values=('propagation', 'accumulation', 'intr-test','intrinsic')
+                allowed_values=('propagation', 'accumulation','intr-mic', 'intr-test','intrinsic')
               ),
 
                   
